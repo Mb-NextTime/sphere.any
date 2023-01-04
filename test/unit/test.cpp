@@ -123,7 +123,12 @@ TEST_F(TestAny, NewValue)
     ASSERT_THROW(any_cast<std::string>(b), bad_any_cast);
 }
 
+TEST_F(TestAny, Nullcast)
+{
 
+    ASSERT_EQ(any_cast<int>(static_cast<any*>(nullptr)), nullptr);
+
+}
 int main(int argc, char* argv[])
 {
     testing::InitGoogleTest(&argc, argv);

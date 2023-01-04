@@ -28,6 +28,14 @@ else
     echo "${RED}[  FAILED  ]${NC} test ${TEST_N}"
 fi
 
+TEST_N=$((${TEST_N} + 1))
+echo "${GREEN}[ RUN      ]${NC} test ${TEST_N}"
+if echo "3 i 1 f 2.0 d 3.0 d" | ./tmp/demo 2>${NULL} 1>${NULL} == "3.0" ; then
+    echo "${GREEN}[       OK ]${NC} test ${TEST_N}"
+    PASSED=$((${PASSED} + 1))
+else
+    echo "${RED}[  FAILED  ]${NC} test ${TEST_N}"
+fi
 
 echo "${GREEN}[==========]${NC}"
 if [ ${PASSED} -ne 0 ] ; then
