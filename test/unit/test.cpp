@@ -125,9 +125,7 @@ TEST_F(TestAny, NewValue)
 
 TEST_F(TestAny, Nullcast)
 {
-
     ASSERT_EQ(any_cast<int>(static_cast<any*>(nullptr)), nullptr);
-
 }
 int main(int argc, char* argv[])
 {
