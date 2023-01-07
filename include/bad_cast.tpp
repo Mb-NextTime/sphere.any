@@ -1,7 +1,10 @@
 #pragma once
 
 
-const char* sphere::bad_any_cast::what() const noexcept { return "bad any_cast"; }
+const char* sphere::bad_any_cast::what() const noexcept
+{
+    return "bad any_cast";
+}
 
 [[gnu::noreturn]] inline void __throw_bad_any_cast()
 {

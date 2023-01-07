@@ -8,7 +8,8 @@
 namespace sphere {
 
 
-class bad_any_cast : public std::bad_cast {
+class bad_any_cast : public std::bad_cast
+{
 public:
     const char* what() const noexcept;
 };
@@ -20,8 +21,9 @@ class any
     template<typename _Tp, typename _VTp = std::decay_t<_Tp>>
     using _Decay_if_not_any = std::enable_if_t<!std::is_same_v<_VTp, any>, _VTp>;
 
-    enum class _Op {
-	    ACCESS, GET_TYPE_INFO, CLONE, DESTROY, XFER
+    enum class _Op
+    {
+        ACCESS, GET_TYPE_INFO, CLONE, DESTROY, XFER
     };
 
     union _Arg;
@@ -67,11 +69,11 @@ public:
     template<class T>
     any& operator=(T&& rhs);
 
-    void reset();
+    void reset() noexcept;
 
     bool has_value() const noexcept;
 
-    
+
     template<class T, class... Args>
     friend any make_any(Args&&... args);
 
@@ -91,7 +93,7 @@ private:
 
     void (*_M_manager)(_Op, const any*, _Arg*);
     _Storage _M_storage;
-    
+
 };
 
 // _Manager
@@ -100,4 +102,4 @@ private:
 // class any
 #include "any.tpp"
 
-};
+};  // namespace sphere

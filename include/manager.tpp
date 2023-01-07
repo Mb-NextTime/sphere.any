@@ -1,10 +1,11 @@
 #pragma once
 #include "any.hpp"
+
 template<typename _Tp>
 struct any::_Manager
 {
-	static void
-	_S_manage(_Op __which, const any* __any, _Arg* __arg)
+    static void
+    _S_manage(_Op __which, const any* __any, _Arg* __arg)
     {
         // The contained object is *_M_storage._M_ptr
         auto __ptr = static_cast<const _Tp*>(__any->_M_storage._M_ptr);
@@ -30,22 +31,22 @@ struct any::_Manager
         }
     }
 
-	template<typename _Up>
+    template<typename _Up>
     static void
     _S_create(_Storage& __storage, _Up&& __value)
     {
     __storage._M_ptr = new _Tp(std::forward<_Up>(__value));
     }
-	template<typename... _Args>
+    template<typename... _Args>
     static void
     _S_create(_Storage& __storage, _Args&&... __args)
     {
     __storage._M_ptr = new _Tp(std::forward<_Args>(__args)...);
     }
-	static _Tp*
-	_S_access(const _Storage& __storage)
-	{
-	  // The contained object is in *__storage._M_ptr
-	  return static_cast<_Tp*>(__storage._M_ptr);
-	}
+    static _Tp*
+    _S_access(const _Storage& __storage)
+    {
+      // The contained object is in *__storage._M_ptr
+      return static_cast<_Tp*>(__storage._M_ptr);
+    }
 };

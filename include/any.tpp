@@ -3,16 +3,14 @@
 #include "any.hpp"
 constexpr any::any() noexcept
     : _M_manager(nullptr)
-{
-}
+{}
 
 /// @brief Copy constructor, copies the state of @p __other
 any::any(const any &__other)
 {
     if (!__other.has_value())
         _M_manager = nullptr;
-    else
-    {
+    else {
         _Arg __arg;
         __arg._M_any = this;
         __other._M_manager(_Op::CLONE, &__other, &__arg);
@@ -24,8 +22,7 @@ any::any(any &&__other) noexcept
 {
     if (!__other.has_value())
         _M_manager = nullptr;
-    else
-    {
+    else {
         _Arg __arg;
         __arg._M_any = this;
         __other._M_manager(_Op::XFER, &__other, &__arg);
@@ -37,10 +34,9 @@ any::~any()
     reset();
 }
 
-void any::reset()
+void any::reset() noexcept
 {
-    if (has_value())
-    {
+    if (has_value()) {
         _M_manager(_Op::DESTROY, this, nullptr);
         _M_manager = nullptr;
     }
@@ -73,8 +69,7 @@ any &any::operator=(any &&__rhs) noexcept
 {
     if (!__rhs.has_value())
         reset();
-    else if (this != &__rhs)
-    {
+    else if (this != &__rhs) {
         reset();
         _Arg __arg;
         __arg._M_any = this;
@@ -107,9 +102,9 @@ inline _ValueType any_cast(const any &__any)
 {
     using _Up = std::__remove_cvref_t<_ValueType>;
     static_assert(any::__is_valid_cast<_ValueType>(),
-                  "Template argument must be a reference or CopyConstructible type");
+    "Template argument must be a reference or CopyConstructible type");
     static_assert(std::is_constructible_v<_ValueType, const _Up &>,
-                  "Template argument must be constructible from a const value.");
+    "Template argument must be constructible from a const value.");
     auto __p = any_cast<_Up>(&__any);
     if (__p)
         return static_cast<_ValueType>(*__p);
@@ -131,9 +126,9 @@ inline _ValueType any_cast(any &__any)
 {
     using _Up = std::__remove_cvref_t<_ValueType>;
     static_assert(any::__is_valid_cast<_ValueType>(),
-                  "Template argument must be a reference or CopyConstructible type");
+    "Template argument must be a reference or CopyConstructible type");
     static_assert(std::is_constructible_v<_ValueType, _Up &>,
-                  "Template argument must be constructible from an lvalue.");
+    "Template argument must be constructible from an lvalue.");
     auto __p = any_cast<_Up>(&__any);
     if (__p)
         return static_cast<_ValueType>(*__p);
@@ -155,9 +150,9 @@ inline _ValueType any_cast(any &&__any)
 {
     using _Up = std::__remove_cvref_t<_ValueType>;
     static_assert(any::__is_valid_cast<_ValueType>(),
-                  "Template argument must be a reference or CopyConstructible type");
+    "Template argument must be a reference or CopyConstructible type");
     static_assert(std::is_constructible_v<_ValueType, _Up>,
-                  "Template argument must be constructible from an rvalue.");
+    "Template argument must be constructible from an rvalue.");
     auto __p = any_cast<_Up>(&__any);
     if (__p)
         return static_cast<_ValueType>(std::move(*__p));
@@ -178,8 +173,7 @@ void *__any_caster(const any *__any)
     if constexpr (!std::is_copy_constructible_v<_Up>)
         return nullptr;
     // Try comparing function addresses, which works without RTTI
-    if (__any->_M_manager == &any::_Manager<_Up>::_S_manage)
-    {
+    if (__any->_M_manager == &any::_Manager<_Up>::_S_manage) {
         return any::_Manager<_Up>::_S_access(__any->_M_storage);
     }
     return nullptr;
@@ -197,10 +191,8 @@ void *__any_caster(const any *__any)
 template <typename _ValueType>
 inline const _ValueType *any_cast(const any *__any) noexcept
 {
-    if constexpr (std::is_object_v<_ValueType>)
-    {
-        if (__any)
-        {
+    if constexpr (std::is_object_v<_ValueType>) {
+        if (__any) {
             return static_cast<_ValueType *>(__any_caster<_ValueType>(__any));
         }
     }
@@ -210,10 +202,8 @@ inline const _ValueType *any_cast(const any *__any) noexcept
 template <typename _ValueType>
 inline _ValueType *any_cast(any *__any) noexcept
 {
-    if constexpr (std::is_object_v<_ValueType>)
-    {
-        if (__any)
-        {
+    if constexpr (std::is_object_v<_ValueType>) {
+        if (__any) {
             return static_cast<_ValueType *>(__any_caster<_ValueType>(__any));
         }
     }
