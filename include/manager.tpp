@@ -1,5 +1,5 @@
 #pragma once
-
+#include "any.hpp"
 template<typename _Tp>
 struct any::_Manager
 {
@@ -10,19 +10,19 @@ struct any::_Manager
         auto __ptr = static_cast<const _Tp*>(__any->_M_storage._M_ptr);
         switch (__which)
         {
-        case _Op_access:
+        case _Op::ACCESS :
             __arg->_M_obj = const_cast<_Tp*>(__ptr);
             break;
-        case _Op_get_type_info:
+        case _Op::GET_TYPE_INFO:
             break;
-        case _Op_clone:
+        case _Op::CLONE:
             __arg->_M_any->_M_storage._M_ptr = new _Tp(*__ptr);
             __arg->_M_any->_M_manager = __any->_M_manager;
             break;
-        case _Op_destroy:
+        case _Op::DESTROY:
             delete __ptr;
             break;
-        case _Op_xfer:
+        case _Op::XFER:
             __arg->_M_any->_M_storage._M_ptr = __any->_M_storage._M_ptr;
             __arg->_M_any->_M_manager = __any->_M_manager;
             const_cast<any*>(__any)->_M_manager = nullptr;
